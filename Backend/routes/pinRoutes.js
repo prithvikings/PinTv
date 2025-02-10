@@ -1,7 +1,7 @@
 import express from 'express';
 import uploadFile from "../middleware/multer.js";
 import {isAuth} from "../middleware/isAuth.js";
-import { createPin, getAllPins, getSinglePin } from "../controller/pinController.js";
+import { commentOnpin, createPin, getAllPins, getSinglePin,updatePin,deletePin,deleteComment } from "../controller/pinController.js";
 
 
 const router = express.Router();
@@ -10,5 +10,9 @@ const router = express.Router();
 router.post("/new",isAuth,uploadFile,createPin);
 router.get("/all",isAuth,getAllPins);
 router.get("/:id",isAuth,getSinglePin);
+router.put("/:id", isAuth, updatePin);
+router.delete("/:id", isAuth, deletePin)
+router.post("/comment/:id",isAuth,commentOnpin);
+router.delete("/comment/:id", isAuth, deleteComment);
 
 export default router;
