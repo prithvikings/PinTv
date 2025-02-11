@@ -1,18 +1,24 @@
-import express from 'express';
+import express from "express";
+import { isAuth } from "../middleware/isAuth.js";
 import uploadFile from "../middleware/multer.js";
-import {isAuth} from "../middleware/isAuth.js";
-import { commentOnpin, createPin, getAllPins, getSinglePin,updatePin,deletePin,deleteComment } from "../controller/pinController.js";
-
+import {
+  commentOnPin,
+  createPin,
+  deleteComment,
+  deletePin,
+  getAllPins,
+  getSinglePin,
+  updatePin,
+} from "../controller/pinController.js";
 
 const router = express.Router();
 
-
-router.post("/new",isAuth,uploadFile,createPin);
-router.get("/all",isAuth,getAllPins);
-router.get("/:id",isAuth,getSinglePin);
+router.post("/new", isAuth, uploadFile, createPin);
+router.get("/all", isAuth, getAllPins);
+router.get("/:id", isAuth, getSinglePin);
 router.put("/:id", isAuth, updatePin);
-router.delete("/:id", isAuth, deletePin)
-router.post("/comment/:id",isAuth,commentOnpin);
+router.delete("/:id", isAuth, deletePin);
+router.post("/comment/:id", isAuth, commentOnPin);
 router.delete("/comment/:id", isAuth, deleteComment);
 
 export default router;

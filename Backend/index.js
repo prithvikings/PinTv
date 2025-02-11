@@ -1,36 +1,43 @@
-import express from 'express';
-import dotenv from 'dotenv';
-import connectDb from './database/db.js';
-import cookieParser from 'cookie-parser';
-import cloudinary from 'cloudinary';
+import express from "express";
+import dotenv from "dotenv";
+import connectDb from "./database/db.js";
+import cookieParser from "cookie-parser";
+import cloudinary from "cloudinary";
+import path from "path";
+
 dotenv.config();
+
 cloudinary.v2.config({
-    cloud_name:process.env.cloud_name,
-    api_key:process.env.cloud_Api,
-    api_secret:process.env.cloud_Secret
-})
+  cloud_name: process.env.Cloud_Name,
+  api_key: process.env.Cloud_Api,
+  api_secret: process.env.Cloud_Secret,
+});
 
 const app = express();
-const port=process.env.PORT;
 
+const port = process.env.PORT;
 
-//middleware
+//using middlewares
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(express.static('public'));
 app.use(cookieParser());
 
+// importing routes
+import userRoutes from "./routes/userRoutes.js";
+import pinRoutes from "./routes/pinRoutes.js";
 
-//import routes
-import userRoutes from './routes/userRoutes.js';
-import pinroutes from './routes/pinRoutes.js';
+// using routes
+app.use("/api/user", userRoutes);
+app.use("/api/pin", pinRoutes);
 
+const __dirname = path.resolve();
 
-//using routes
-app.use('/api/users', userRoutes);
-app.use('/api/pin', pinroutes);
+app.use(express.static(path.join(__dirname, "/frontend/dist")));
+
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "frontend", "dist", "index.html"));
+});
 
 app.listen(port, () => {
-    connectDb();
-    console.log('Server is running on port 3000');
+  console.log(`Server is running on http://localhost:${port}`);
+  connectDb();
 });
